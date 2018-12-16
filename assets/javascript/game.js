@@ -15,6 +15,7 @@ var user = firebase.auth().currentUser;
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     // User is signed in.
+    console.log(user);
     $("#welcome").html("Logged in successfully");
     $(".loginRemove").addClass("d-none");
     $(".loginAdd").removeClass("d-none");
@@ -28,12 +29,27 @@ firebase.auth().onAuthStateChanged(function(user) {
   }
 });
 
+database.ref("activePlayers").on("value", function(snapshot) {
+    
+    if (snapshot.player1Btn == true) {
+      player1Active = true;
+    } else {player1Active = false}
+    if (snapshot.player2Btn == true) {
+      player2Active = true;
+    } else {player2Active = false}
+  })
+
+
 $(document).ready(function(){
 
 var user = false;
 var signinOpen = false;
 var registerOpen = false;
 var displayName;
+var player1Active;
+var player2Active;
+var userIsPlayer1 = false;
+var userIsPlayer2 = false;
 
 $("#signin").on("click", function() {
   if (registerOpen == false) {
@@ -53,6 +69,8 @@ $("#signinBtn").on("click", signIn);
 $("#registerBtn").on("click", register);
 $("#logoutBtn").on("click", logout);
 $("#usernameUpdateBtn").on("click", updateUser);
+$("#player1Btn").on("click", player1Sit);
+$("#player2Btn").on("click", player2Sit);
 })
 
 function signIn() {
@@ -100,7 +118,9 @@ function updateUser() {
     displayName: newName
   }).then(function() {
     $("#welcome").html("Logged in successfully as " + newName);
+    $("#usernameUpdateBtn").attr("placeholder", "Choose your Display Name");
   })
+  return userDisplay = newName;
 }
 
 function logout() {
@@ -109,4 +129,26 @@ function logout() {
   }).catch(function(error) {
     // An error happened.
   });
+}
+
+function player1Sit() {
+  if (!player1Active && !userIsPlayer2) {
+  userIsPlayer1 = true;
+  var user = userDisplay;
+  database.ref("activePlayers").update({
+    player1Btn: true,
+    player1: user
+  })
+}
+}
+
+function player2Sit() {
+  if (!player2Active && !userIsPlayer1) {
+  userIsPlayer2 = true;
+  var user = userDisplay;
+  database.ref("activePlayers").update({
+    player2Btn: true,
+    player2: user
+  })
+}
 }

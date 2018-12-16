@@ -1,0 +1,18 @@
+.playerBox {
+    border: 2px solid;
+    height: 400px;
+    margin: .5em;
+}
+
+#gameChat {
+    border: 2px solid;
+    height: 200px;
+}
+
+#welcomeButtons {
+    display:flex;
+}
+
+#welcomeInputs {
+    display:flex;
+}

@@ -64,6 +64,15 @@ database.ref("activePlayers/").on("value", function(snapshot) {
     }
   })
 
+database.ref("Chat/").on("child_added", function(snapshot) {
+  console.log(snapshot);
+  var newChatDiv = $("<div>")
+  newChatDiv.attr("class", "chatDiv");
+  var newChat = snapshot.val().chat;
+  newChatDiv.append(newChat);
+  $("#gameChat").prepend(newChatDiv);
+})
+
 var signinOpen = false;
 var registerOpen = false;
 var displayName;
@@ -71,7 +80,7 @@ var player1Active;
 var player2Active;
 var userIsPlayer1 = false;
 var userIsPlayer2 = false;
-var userDisplay;
+var userDisplay = false;
 
 
 $(document).ready(function(){
@@ -96,6 +105,7 @@ $("#logoutBtn").on("click", logout);
 $("#usernameUpdateBtn").on("click", updateUser);
 $("#player1Btn").on("click", player1Sit);
 $("#player2Btn").on("click", player2Sit);
+$("#chatSubmit").on("click", submitChat);
 })
 
 function signIn() {
@@ -206,4 +216,17 @@ function startGame() {
     player2: null,
   })
   $("#welcome").html("Two Players have entered! Make your choice!");
+  $(".playerInput").addClass("activeBtn");
+}
+
+function submitChat() {
+  if (userDisplay) {
+  var chatInput = $("#chatType").val().trim();
+  var user = userDisplay;
+  database.ref("Chat").push({
+    chat: user + ": " + chatInput
+  })
+} else {
+  alert("Log in and choose a display name first.")
+}
 }

@@ -2,6 +2,7 @@
     border: 2px solid;
     height: 400px;
     margin: .5em;
+    display: flex;
 }
 
 #welcome {
@@ -34,4 +35,19 @@
 
 #usernameUpdate {
     width: 50%;
+}
+
+.sitBtn {
+    height: 75px;
+    margin-top: 5px;
+}
+
+.rpsBox {
+    display: flex;
+    height:305px;
+    width:100px;
+}
+
+.playerName {
+    margin: 0 auto 0 auto;
 }

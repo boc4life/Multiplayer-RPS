@@ -29,20 +29,32 @@ firebase.auth().onAuthStateChanged(function(user) {
   }
 });
 
-database.ref("activePlayers").on("value", function(snapshot) {
-    
-    if (snapshot.player1Btn == true) {
+database.ref("activePlayers/").on("value", function(snapshot) {
+  var snap = snapshot.val();
+    if (snap.player1Btn == true) {
       player1Active = true;
-    } else {player1Active = false}
-    if (snapshot.player2Btn == true) {
+      $("#player1Btn").addClass("d-none");
+      $("#player1Name").html("<h3>" + snap.player1 + "</h3>");
+      $("#player1RPS").removeClass("d-none");
+    } else {
+      player1Active = false;
+      $("#player1Btn").removeClass("d-none");
+      $("#player1Name").html("");
+      $("#player1RPS").addClass("d-none");
+    }
+    if (snap.player2Btn == true) {
       player2Active = true;
-    } else {player2Active = false}
+      $("#player2Btn").addClass("d-none");
+      $("#player2Name").html("<h3>" + snap.player2 + "</h3>")
+      $("#player2RPS").removeClass("d-none");
+    } else {
+      player2Active = false;
+      $("#player2Btn").removeClass("d-none");
+      $("#player2Name").html("")
+      $("#player2RPS").addClass("d-none");
+    }
   })
 
-
-$(document).ready(function(){
-
-var user = false;
 var signinOpen = false;
 var registerOpen = false;
 var displayName;
@@ -50,6 +62,10 @@ var player1Active;
 var player2Active;
 var userIsPlayer1 = false;
 var userIsPlayer2 = false;
+var userDisplay;
+
+
+$(document).ready(function(){
 
 $("#signin").on("click", function() {
   if (registerOpen == false) {

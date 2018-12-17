@@ -16,7 +16,7 @@ firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     // User is signed in.
     console.log(user);
-    $("#welcome").html("Logged in successfully");
+    $("#welcome").html("Logged in successfully. Please choose a display name to take a seat.");
     $(".loginRemove").addClass("d-none");
     $(".loginAdd").removeClass("d-none");
     $("#logoutBtn").removeClass("d-none");
@@ -28,6 +28,15 @@ firebase.auth().onAuthStateChanged(function(user) {
     $("#logoutBtn").addClass("d-none");
   }
 });
+
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
+  .then(function() {
+    return firebase.auth().signInWithEmailAndPassword(email, password);
+  })
+  .catch(function(error) {
+    var errorCode = error.code;
+    var errorMessage = error.message;
+  });
 
 database.ref("activePlayers/").on("value", function(snapshot) {
   var snap = snapshot.val();
@@ -134,14 +143,28 @@ function updateUser() {
     displayName: newName
   }).then(function() {
     $("#welcome").html("Logged in successfully as " + newName);
-    $("#usernameUpdateBtn").attr("placeholder", "Choose your Display Name");
+    $(".displayName").addClass("d-none");
+    console.log(user);
   })
   return userDisplay = newName;
 }
 
 function logout() {
   firebase.auth().signOut().then(function() {
-    // Sign-out successful.
+    if (userIsPlayer1) {
+      database.ref("activePlayers").update({
+        player1Btn: false,
+        player1: ""
+      })
+      userIsPlayer1 = false;
+    }
+      else if (userIsPlayer2) {
+        database.ref("activePlayers").update({
+          player2Btn: false,
+          player2: ""
+        })
+      }
+      userIsPlayer2 = false;
   }).catch(function(error) {
     // An error happened.
   });
@@ -154,7 +177,11 @@ function player1Sit() {
   database.ref("activePlayers").update({
     player1Btn: true,
     player1: user
-  })
+  }).then(function() {
+  if (player1Active && player2Active) {
+    startGame();
+  }
+})
 }
 }
 
@@ -165,6 +192,18 @@ function player2Sit() {
   database.ref("activePlayers").update({
     player2Btn: true,
     player2: user
+  }).then(function() {
+    if (player1Active && player2Active) {
+      startGame();
+    }
   })
 }
+}
+
+function startGame() {
+  database.ref("inputs").set({
+    player1: null,
+    player2: null,
+  })
+  $("#welcome").html("Two Players have entered! Make your choice!");
 }

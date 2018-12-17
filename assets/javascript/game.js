@@ -69,7 +69,7 @@ database.ref("Chat/").on("child_added", function(snapshot) {
   var newChatDiv = $("<div>")
   newChatDiv.attr("class", "chatDiv");
   var newChat = snapshot.val().chat;
-  newChatDiv.append(newChat);
+  newChatDiv.prepend(newChat);
   $("#gameChat").prepend(newChatDiv);
 })
 

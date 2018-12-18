@@ -1,0 +1,86 @@
+$(function()
+{
+	var info = $('.upload-info');
+
+	function progress(value)
+	{
+		$('.progress', info).val(value);
+		var p = value + '%';
+		$('.progress-bar', info).width(p).text(p);
+	}
+
+	function upload(files)
+	{
+		if (files.length !== 1)
+		{
+			console.log('BAD FILES.LENGTH', files.length);
+		}
+
+		FileAPI.upload(
+		{
+			url: FileAPI.storeUrl,
+			data: {
+				userId: FileAPI.currentUserId,
+				redirect: FileAPI.afterUploadRedirect,
+				isFlashUploader: 'yes'
+			},
+			files:
+			{
+				file: files
+			},
+			prepare: function(evt)
+			{
+				info.show();
+				progress(0);
+			},
+			progress: function(evt)
+			{
+				progress(Math.floor(
+					evt.loaded / evt.total * 100));
+			},
+			complete: function (err, xhr)
+			{
+				setTimeout(function()
+				{
+					info.hide();
+				},
+				10000);
+
+				/*
+				if (err)
+				{
+					$('.upload > .btn').attr('disabled', 'disabled');
+				}
+				*/
+
+				try
+				{
+					document.location.href =
+						xhr.responseText.substring(10);
+				}
+				catch (e) {}
+			}
+		});
+	}
+
+	$('.upload > input').on('change', function(e)
+	{
+		upload(FileAPI.getFiles(e));
+	});
+
+	$('.upload-info .close').on('click', function(e)
+	{
+		info.hide();
+	});
+
+	$('.landing').dnd(
+		function(over)
+	{
+		$('.container', this).toggleClass('upload-area', over);
+	},
+		function(files)
+	{
+		upload(files);
+	});
+});
+

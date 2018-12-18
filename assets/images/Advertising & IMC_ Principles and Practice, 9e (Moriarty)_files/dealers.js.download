@@ -1,0 +1,134 @@
+var dealers = {
+    40226: {
+        "dealer-name": "Townline Equipment",
+        "content": "Plainfield, NH<br>Pittsford, VT"  
+    },
+    40404: {
+        "dealer-name": "Townline Equipment",
+        "content": "Plainfield, NH<br>Pittsford, VT"
+    },
+    40405: {
+        "dealer-name": "Six and Mango",
+        "content": "Frisco<br>Grand Prairie<br>Sherman" 
+    },
+    40693: {
+        "dealer-name": "Norfolk Power Equipment",
+        "content": "Wrentham<br>Carver<br>Burrillville"
+    },    
+    40727: {
+        "dealer-name": "Arnold's",
+        "content": "Arnold's<br>Central Minnesota"
+    },
+    40768: {
+        "dealer-name": "Middlefield & Mentor MFG",
+        "content": "Middlefield MFG<br> &amp; <br>Mentor MFG"
+    },
+    40769: {
+        "dealer-name": "Burke Equipment Company",
+        "content": "Newark, DE<br>Felton, DE<br>Delmar, DE"
+    },
+    40804: {
+        "dealer-name": "Western Implement",
+        "content": "Grand Junction<br>Montrose" 
+    },
+    40901: {
+        "dealer-name": "Zimmer Tractor",
+        "content": "Monroe<br>Brookville<br>Aurora"
+    },
+    41010: {
+        "dealer-name": "Hlavinka Equipment Company",
+        "content": "Hlavinka Equipment Company<br>Rosenberg & Bay City, TX"
+    },
+    41057: {
+        "dealer-name": "C&N Tractors",
+        "content": "496 Salinas Rd<br>Watsonville, CA<br>2690 Ramada Drive<br>Paso Robles, CA</span>"
+    },
+    41058: {
+        "dealer-name": "C.H. Waltz Sons, Inc.",
+        "content": "4 Locations in Pennsylvania<br>CHWaltz.com"
+    },
+    41079: {
+        "dealer-name": "Deviney Equipment",
+        "content": "Jackson, MS<br>Madison, MS<br>devineyequipment.com" 
+    },
+    41085: {
+        "dealer-name": "Wolf Kubota",
+        "content": "Byron Center<br>Mattawan<br>Kalamazoo"
+    },
+    41086: {
+        "dealer-name": "Garton Tractor Inc",
+        "content": "Garton Tractor Inc<br>7 Locations in California<br>1-877-TRACTOR" 
+    },
+    41087: {
+        "dealer-name": "Green And Sons",
+        "content": "Mount Sterling<br>Hilliard<br>Broadway"
+    },
+    41110: {
+        "dealer-name": "Sterling Farm Equipment",
+        "content": "Sterling, OH<br>Wooster, OH<br>sterlingfarmstore.com"
+    },
+    41116: {
+        "dealer-name": "Hugh C. Gardiner",
+        "content": "25580 Three Notch Rd<br>Hollywood, MD 20636"
+    },
+    41117: {
+        "dealer-name": "Farmers Equipment",
+        "content": "Farmers Equipment<br>26863 Lakeview, OH"
+    },
+    41118: {
+        "dealer-name": "A.R. Beatty Equipment",
+        "content": "Erie, PA<br>Youngsville, PA<br>ARBeatty.com"
+    },
+    41119: {
+        "dealer-name": "Hagan's Outdoor Equipment",
+        "content": "Philpot, KY<br>Owensboro, KY<br>www.gohagan.com"
+    },
+    41124: {
+        "dealer-name": "Acme Tools",
+        "content": "Acme Tools<br>Grand Forks, ND<br>Bemidji, MN"
+    },
+    41126: {
+        "dealer-name": "Zimmerer Kubota",
+        "content": "5 locations to serve you"
+    },
+    41155: {
+        "dealer-name": "Acme Tools",
+        "content": "Acme Tools<br>Minot, ND<br>Williston, ND"
+    },
+    41158: {
+        "dealer-name": "Redline Equipment",
+        "content": "3975 S Adrian Hwy<br>Adrian, MI 49221<br>517-265-5630"
+    },
+    41171: {
+        "dealer-name": "Value Implement",
+        "content": "Four West Central Wisconsin<br>locations to serve you."
+    },
+    41197: {
+        "dealer-name": "Champlain Valley Equipment",
+        "content": "Champlain Valley Equipment<br>4 locations in Vermont"
+    },
+    41199: {
+        "dealer-name": "Deen Kubota",
+        "content": "Wills Point, TX<br>Forney, TX<br>(866) 668-5663"
+    },
+    41206: {
+        "dealer-name": "Martin Implement",
+        "content": "Martin Implement<br>Orland Park, IL<br>(708) 349-8430"
+    },
+    41274: {
+        "dealer-name": "Kubota Center",
+        "content": "3 locations in Arkansas<br>479-431-2196"
+    },
+    41279: {
+        "dealer-name": "Kubota Center OK",
+        "content": "3 locations in Oklahoma<br>(918) 221-6219"
+    },
+    41293: {
+        "dealer-name": "Empire Tractor",
+        "content": "Waterloo NY<br>Atlanta NY<br>Cortland NY"
+    },
+    41304: {
+        "dealer-name": "Pocahontas Equipment",
+        "content": "Pocahontas Equipment<br>Pocahontas, IA<br>(712) 335-4522"
+    },
+}

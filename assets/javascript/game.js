@@ -68,8 +68,9 @@ database.ref("Chat/").on("child_added", function(snapshot) {
   console.log(snapshot);
   var newChatDiv = $("<div>")
   newChatDiv.attr("class", "chatDiv");
+  var newChatName = snapshot.val().userName
   var newChat = snapshot.val().chat;
-  newChatDiv.prepend(newChat);
+  newChatDiv.append(newChatName).append(": ").append(newChat);
   $("#gameChat").prepend(newChatDiv);
 })
 
@@ -181,7 +182,7 @@ function logout() {
 }
 
 function player1Sit() {
-  if (!player1Active && !userIsPlayer2) {
+  if (!player1Active && !userIsPlayer2 && userDisplay) {
   userIsPlayer1 = true;
   var user = userDisplay;
   database.ref("activePlayers").update({
@@ -196,7 +197,7 @@ function player1Sit() {
 }
 
 function player2Sit() {
-  if (!player2Active && !userIsPlayer1) {
+  if (!player2Active && !userIsPlayer1 && userDisplay) {
   userIsPlayer2 = true;
   var user = userDisplay;
   database.ref("activePlayers").update({
@@ -224,7 +225,8 @@ function submitChat() {
   var chatInput = $("#chatType").val().trim();
   var user = userDisplay;
   database.ref("Chat").push({
-    chat: user + ": " + chatInput
+    userName: user,
+    chat: chatInput
   })
 } else {
   alert("Log in and choose a display name first.")

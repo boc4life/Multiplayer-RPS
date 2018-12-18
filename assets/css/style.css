@@ -1,7 +1,6 @@
 .playerBox {
     border: 2px solid;
     height: 400px;
-    margin: .5em;
     display: flex;
 }
 
@@ -54,4 +53,9 @@
 
 .chatDiv {
     float: left;
+}
+
+#chatInputBox {
+    position: absolute;
+    bottom: 2px;
 }

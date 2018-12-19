@@ -48,6 +48,7 @@ database.ref("activePlayers/").on("value", function(snapshot) {
   var snap = snapshot.val();
   console.log(snap)
     if (snap.player1Btn == true) {
+      $("#player1Record").removeClass("d-none");
       uid = snap.player1UID;
       database.ref("users/" + uid).once("value", function(player) {
         userWins = player.val().wins;
@@ -63,11 +64,13 @@ database.ref("activePlayers/").on("value", function(snapshot) {
         }
     } else {
       player1Active = false;
+      $("#player1Record").addClass("d-none");
       $("#player1Btn").removeClass("d-none");
       $("#player1Name").html("");
       $("#player1RPS").addClass("d-none");
     }
     if (snap.player2Btn == true) {
+      $("#player2Record").removeClass("d-none");
       uid = snap.player2UID;
       database.ref("users/" + uid).once("value", function(player) {
         userWins = player.val().wins;
@@ -86,6 +89,7 @@ database.ref("activePlayers/").on("value", function(snapshot) {
       $("#player2Btn").removeClass("d-none");
       $("#player2Name").html("")
       $("#player2RPS").addClass("d-none");
+      $("#player1RPS").addClass("d-none");
     }
   })
 

@@ -23,7 +23,7 @@
     </nav>
     <br>
         <div class="container d-flex justify-content-center">
-            <p id="welcome">Sign In or Register, then choose a display name to play!</p>
+            <p id="welcome">Sign In or Register, then choose a display name to play! </p><span id="timerWrapper" class="d-none"><span id="timer"></span> seconds left!</span>
         </div>
         <br>
         <div class="container d-flex justify-content-center">
@@ -41,9 +41,9 @@
             <button type="button" class="btn sitBtn" id="player1Btn">Sit here</button>
             <span id="player1Name" class="playerName"><h2></h2></span>
             <div class="container flex-column rpsBox d-none" id="player1RPS">
-                <img src="assets/images/rock.png" class="playerInput" id="player1Rock">
-                <img src="assets/images/paper.png" class="playerInput" id="player1Paper">
-                <img src="assets/images/scissors.png" class="playerInput" id="player1Scissors">
+                <img src="assets/images/rock.png" class="playerInput" data-type="rock" id="player1Rock">
+                <img src="assets/images/paper.png" class="playerInput" data-type="paper" id="player1Paper">
+                <img src="assets/images/scissors.png" class="playerInput" data-type="scissors" id="player1Scissors">
             </div>
             <span id="player1Record"></span>
         </div>
@@ -75,10 +75,11 @@
             <button type="button" class="btn sitBtn" id="player2Btn">Sit here</button>
             <span id="player2Name" class="playerName"><h2></h2></span>
             <div class="container flex-column rpsBox d-none" id="player2RPS">
-                <img src="assets/images/rock.png" class="playerInput" id="player2Rock">
-                <img src="assets/images/paper.png" class="playerInput" id="player2Paper">
-                <img src="assets/images/scissors.png" class="playerInput" id="player2Scissors">
+                <img src="assets/images/rock.png" class="playerInput" data-type="rock" id="player2Rock">
+                <img src="assets/images/paper.png" class="playerInput" data-type="paper" id="player2Paper">
+                <img src="assets/images/scissors.png" class="playerInput" data-type="scissors" id="player2Scissors">
             </div>
+            <span id="player2Record"></span>
         </div>
     </div>
 </div>

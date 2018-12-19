@@ -41,6 +41,9 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE)
     var errorMessage = error.message;
   });
 
+  // From here until the global variables are global Firebase Event Listeners.
+
+  // Code to be executed when a player takes a seat or leaves. Also runs on page load.
 database.ref("activePlayers/").on("value", function(snapshot) {
   var snap = snapshot.val();
   console.log(snap)
@@ -55,7 +58,9 @@ database.ref("activePlayers/").on("value", function(snapshot) {
       player1Active = true;
       $("#player1Btn").addClass("d-none");
       $("#player1Name").html("<h3>" + snap.player1 + "</h3>");
-      $("#player1RPS").removeClass("d-none");
+        if (userIsPlayer1) {
+          $("#player1RPS").removeClass("d-none");
+        }
     } else {
       player1Active = false;
       $("#player1Btn").removeClass("d-none");
@@ -68,12 +73,14 @@ database.ref("activePlayers/").on("value", function(snapshot) {
         userWins = player.val().wins;
         userLosses = player.val().losses;
         userTies = player.val().ties;
-      $("#player1Record").html("<strong>Wins:</strong> " + userWins + "<br><strong>Losses:</strong> " + userLosses + "<br><strong>Ties:</strong> " + userTies);
+      $("#player2Record").html("<strong>Wins:</strong> " + userWins + "<br><strong>Losses:</strong> " + userLosses + "<br><strong>Ties:</strong> " + userTies);
       })
       player2Active = true;
       $("#player2Btn").addClass("d-none");
       $("#player2Name").html("<h3>" + snap.player2 + "</h3>")
-      $("#player2RPS").removeClass("d-none");
+        if (userIsPlayer2) {
+          $("#player2RPS").removeClass("d-none");
+        }
     } else {
       player2Active = false;
       $("#player2Btn").removeClass("d-none");
@@ -82,6 +89,7 @@ database.ref("activePlayers/").on("value", function(snapshot) {
     }
   })
 
+  // Chat display function
 database.ref("/Chat").limitToLast(5).on("child_added", function(snapshot) {
   console.log(snapshot);
   var newChatDiv = $("<div>")
@@ -93,6 +101,14 @@ database.ref("/Chat").limitToLast(5).on("child_added", function(snapshot) {
   $("#gameChat").append(newChatDiv);
 })
 
+database.ref("inputs").on("value", function(snapshot){
+  if (snapshot.player1Chosen && snapshot.player2Chosen == true) {
+    compareInputs();
+  }
+})
+
+  // Declaring Global variables for page load.
+
 var signinOpen = false;
 var registerOpen = false;
 var displayName;
@@ -102,9 +118,14 @@ var userIsPlayer1 = false;
 var userIsPlayer2 = false;
 var userDisplay = false;
 var uid;
+var timer;
+var clock;
+var player1Input;
+var player2Input;
 
 $(document).ready(function(){
-
+  
+  // All HTML click listeners are listed inside this document.ready function.
 $("#signin").on("click", function() {
   if (registerOpen == false) {
   $("#signinArea").slideToggle();
@@ -126,8 +147,11 @@ $("#usernameUpdateBtn").on("click", updateUser);
 $("#player1Btn").on("click", player1Sit);
 $("#player2Btn").on("click", player2Sit);
 $("#chatSubmit").on("click", submitChat);
+$(".activeBtn").on("click", submitInput);
 })
 
+
+  // Global functions.
 function signIn() {
   email = $("#signinEmail").val().trim();
   password = $("#signinPassword").val().trim();
@@ -249,12 +273,15 @@ function player2Sit() {
 }
 
 function startGame() {
+  player1Input = false;
+  player2Input = false;
   database.ref("inputs").set({
-    player1: null,
-    player2: null,
+    player1: false,
+    player2: false,
   })
   $("#welcome").html("Two Players have entered! Make your choice!");
   $(".playerInput").addClass("activeBtn");
+  startTimer();
 }
 
 function submitChat() {
@@ -269,4 +296,72 @@ function submitChat() {
 } else {
   alert("Log in and choose a display name first.")
 }
+}
+
+function startTimer() {
+  $("#timerWrapper").removeClass("d-none");
+  timer = 15;
+  clock = setInterval(count, 1000);
+}
+
+function count() {
+  if (timer > 0) {
+    timer--;
+    $("#timer").html(timer);
+  }
+  if (timer == 0) {
+    alert("Time ran out. The unresponsive players have been removed.")
+      clearInterval(clock);
+      database.ref("inputs").once("value", function(snapshot) {
+        if (snapshot.player1 == false) {
+          database.ref("activePlayers").update({
+            player1: "",
+            player1Btn: false,
+            player1UID: ""
+          })
+        }
+        if (snapshot.player2 == false) {
+          database.ref("activePlayers").update({
+            player2: "",
+            player2Btn: false,
+            player2UID: ""
+          })
+        }
+      }
+      )}
+}
+
+function compareInputs() {
+  database.ref("inputs").once("value", function(snapshot) {
+    player1Input = snapshot.val().player1;
+    player2Input = snapshot.val().player2;
+  })
+  if (player1Input - player2Input == 0) {
+    // tie
+  }
+  else if (player1Input - player2Input == -2 || 1) {
+    // Player 1 wins
+  }
+  else if (player1Input - player2Input == -1 || 2) {
+    // Player 2 wins
+  }
+  else {
+    alert("ERROR");
+  }
+}
+
+function submitInput() {
+  var choice = $(this).attr("data-type");
+    if (choice == "rock") {
+      // Make firebase input = 0
+    }
+    else if (choice == "paper") {
+      // Make firebase input = 1
+    }
+    else if (choice == "scissors") {
+      // Make firebase input = 2
+    }
+    else {
+      alert("ERROR");
+    }
 }

@@ -45,6 +45,13 @@ database.ref("activePlayers/").on("value", function(snapshot) {
   var snap = snapshot.val();
   console.log(snap)
     if (snap.player1Btn == true) {
+      uid = snap.player1UID;
+      database.ref("users/" + uid).once("value", function(player) {
+        userWins = player.val().wins;
+        userLosses = player.val().losses;
+        userTies = player.val().ties;
+      $("#player1Record").html("<strong>Wins:</strong> " + userWins + "<br><strong>Losses:</strong> " + userLosses + "<br><strong>Ties:</strong> " + userTies);
+      })
       player1Active = true;
       $("#player1Btn").addClass("d-none");
       $("#player1Name").html("<h3>" + snap.player1 + "</h3>");
@@ -56,6 +63,13 @@ database.ref("activePlayers/").on("value", function(snapshot) {
       $("#player1RPS").addClass("d-none");
     }
     if (snap.player2Btn == true) {
+      uid = snap.player2UID;
+      database.ref("users/" + uid).once("value", function(player) {
+        userWins = player.val().wins;
+        userLosses = player.val().losses;
+        userTies = player.val().ties;
+      $("#player1Record").html("<strong>Wins:</strong> " + userWins + "<br><strong>Losses:</strong> " + userLosses + "<br><strong>Ties:</strong> " + userTies);
+      })
       player2Active = true;
       $("#player2Btn").addClass("d-none");
       $("#player2Name").html("<h3>" + snap.player2 + "</h3>")
@@ -72,7 +86,8 @@ database.ref("/Chat").limitToLast(5).on("child_added", function(snapshot) {
   console.log(snapshot);
   var newChatDiv = $("<div>")
   newChatDiv.attr("class", "chatDiv");
-  var newChatName = snapshot.val().userName
+  var newChatName = $("<strong>");
+  newChatName.append(snapshot.val().userName);
   var newChat = snapshot.val().chat;
   newChatDiv.append(newChatName).append(": ").append(newChat);
   $("#gameChat").append(newChatDiv);
@@ -204,12 +219,6 @@ function logout() {
 function player1Sit() {
   if (!player1Active && !userIsPlayer2 && userDisplay) {
   userIsPlayer1 = true;
-  database.ref("users/" + uid).once("value", function(snapshot) {
-    userWins = snapshot.val().wins;
-    userLosses = snapshot.val().losses;
-    userTies = snapshot.val().ties;
-  $("#player1Record").html("<strong>Wins:</strong> " + userWins + "<br><strong>Losses:</strong> " + userLosses + "<br><strong>Ties:</strong> " + userTies);
-  })
   user = userDisplay;
   database.ref("activePlayers").update({
     player1Btn: true,
@@ -226,12 +235,6 @@ function player1Sit() {
 function player2Sit() {
   if (!player2Active && !userIsPlayer1 && userDisplay) {
   userIsPlayer2 = true;
-  database.ref("users/" + uid).once("value", function(snapshot) {
-    userWins = snapshot.val().wins;
-    userLosses = snapshot.val().losses;
-    userTies = snapshot.val().ties;
-  $("#player1Record").html("<strong>Wins:</strong> " + userWins + "<br><strong>Losses:</strong> " + userLosses + "<br><strong>Ties:</strong> " + userTies);
-  })
   user = userDisplay;
   database.ref("activePlayers").update({
     player2Btn: true,
@@ -258,6 +261,7 @@ function submitChat() {
   if (userDisplay) {
   var chatInput = $("#chatType").val().trim();
   var user = userDisplay;
+  $("#chatType").val("");
   database.ref("Chat").push({
     userName: user,
     chat: chatInput

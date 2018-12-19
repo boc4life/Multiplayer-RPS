@@ -13,7 +13,9 @@
 
 #gameChat {
     border: 2px solid;
-    height: 200px;
+    height: 150px;
+    padding: 0px 20px 20px 20px;
+    overflow: auto;
 }
 
 #welcomeButtons {
@@ -26,6 +28,7 @@
 
 #registerBtn {
     display: block;
+    margin: auto;
 }
 
 #logoutBtn {
@@ -53,6 +56,7 @@
 
 .chatDiv {
     float: left;
+    vertical-align: bottom;
 }
 
 #chatInputBox {

@@ -20,6 +20,9 @@ firebase.auth().onAuthStateChanged(function(user) {
     $(".loginRemove").addClass("d-none");
     $(".loginAdd").removeClass("d-none");
     $("#logoutBtn").removeClass("d-none");
+    userDisplay = user.displayName;
+    console.log(user.wins);
+    console.log(user.displayName);
   } else {
     // No user is signed in.
     $("#welcome").html("Sign In or Register to Play!");
@@ -29,7 +32,7 @@ firebase.auth().onAuthStateChanged(function(user) {
   }
 });
 
-firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE)
   .then(function() {
     return firebase.auth().signInWithEmailAndPassword(email, password);
   })
@@ -40,6 +43,7 @@ firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
 
 database.ref("activePlayers/").on("value", function(snapshot) {
   var snap = snapshot.val();
+  console.log(snap)
     if (snap.player1Btn == true) {
       player1Active = true;
       $("#player1Btn").addClass("d-none");
@@ -64,14 +68,14 @@ database.ref("activePlayers/").on("value", function(snapshot) {
     }
   })
 
-database.ref("Chat/").on("child_added", function(snapshot) {
+database.ref("/Chat").limitToLast(5).on("child_added", function(snapshot) {
   console.log(snapshot);
   var newChatDiv = $("<div>")
   newChatDiv.attr("class", "chatDiv");
   var newChatName = snapshot.val().userName
   var newChat = snapshot.val().chat;
   newChatDiv.append(newChatName).append(": ").append(newChat);
-  $("#gameChat").prepend(newChatDiv);
+  $("#gameChat").append(newChatDiv);
 })
 
 var signinOpen = false;
@@ -82,7 +86,7 @@ var player2Active;
 var userIsPlayer1 = false;
 var userIsPlayer2 = false;
 var userDisplay = false;
-
+var uid;
 
 $(document).ready(function(){
 
@@ -126,12 +130,16 @@ function signIn() {
     } else {
       alert(errorMessage);
     }
+  }).then(function() {
+  user = firebase.auth().currentUser;
+  uid = user.uid;
   })
 }
 
 function register() {
   email = $("#registerEmail").val().trim();
   password = $("#registerPassword").val().trim();
+  newName = $("#usernameUpdate").val().trim();
   firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
     var errorCode = error.code;
     var errorMessage = error.message;
@@ -144,14 +152,26 @@ function register() {
       alert(errorMessage);
     }
     console.log(error);
+  }).then(function(){
+  user = firebase.auth().currentUser;
+  uid = user.uid;
+  database.ref("users/" + uid).set({
+    wins: 0,
+    losses: 0,
+    ties: 0
   })
+})
+  return userDisplay = newName;
 }
 
 function updateUser() {
   var user = firebase.auth().currentUser;
   newName = $("#usernameUpdate").val().trim();
   user.updateProfile({
-    displayName: newName
+    displayName: newName,
+    wins: 0,
+    losses: 0,
+    ties: 0
   }).then(function() {
     $("#welcome").html("Logged in successfully as " + newName);
     $(".displayName").addClass("d-none");
@@ -184,10 +204,17 @@ function logout() {
 function player1Sit() {
   if (!player1Active && !userIsPlayer2 && userDisplay) {
   userIsPlayer1 = true;
-  var user = userDisplay;
+  database.ref("users/" + uid).once("value", function(snapshot) {
+    userWins = snapshot.val().wins;
+    userLosses = snapshot.val().losses;
+    userTies = snapshot.val().ties;
+  $("#player1Record").html("<strong>Wins:</strong> " + userWins + "<br><strong>Losses:</strong> " + userLosses + "<br><strong>Ties:</strong> " + userTies);
+  })
+  user = userDisplay;
   database.ref("activePlayers").update({
     player1Btn: true,
-    player1: user
+    player1: user,
+    player1UID: uid
   }).then(function() {
   if (player1Active && player2Active) {
     startGame();
@@ -199,10 +226,17 @@ function player1Sit() {
 function player2Sit() {
   if (!player2Active && !userIsPlayer1 && userDisplay) {
   userIsPlayer2 = true;
-  var user = userDisplay;
+  database.ref("users/" + uid).once("value", function(snapshot) {
+    userWins = snapshot.val().wins;
+    userLosses = snapshot.val().losses;
+    userTies = snapshot.val().ties;
+  $("#player1Record").html("<strong>Wins:</strong> " + userWins + "<br><strong>Losses:</strong> " + userLosses + "<br><strong>Ties:</strong> " + userTies);
+  })
+  user = userDisplay;
   database.ref("activePlayers").update({
     player2Btn: true,
-    player2: user
+    player2: user,
+    player2UID: uid
   }).then(function() {
     if (player1Active && player2Active) {
       startGame();

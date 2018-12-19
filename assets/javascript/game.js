@@ -83,6 +83,7 @@ database.ref("activePlayers/").on("value", function(snapshot) {
       $("#player2Name").html("<h3>" + snap.player2 + "</h3>")
         if (userIsPlayer2) {
           $("#player2RPS").removeClass("d-none");
+          console.log("This shouldn't happen");
         }
     } else {
       player2Active = false;
@@ -151,7 +152,6 @@ $("#usernameUpdateBtn").on("click", updateUser);
 $("#player1Btn").on("click", player1Sit);
 $("#player2Btn").on("click", player2Sit);
 $("#chatSubmit").on("click", submitChat);
-$(".activeBtn").on("click", submitInput);
 })
 
 
@@ -285,6 +285,7 @@ function startGame() {
   })
   $("#welcome").html("Two Players have entered! Make your choice!");
   $(".playerInput").addClass("activeBtn");
+  $(".activeBtn").on("click", submitInput);
   startTimer();
 }
 
@@ -304,7 +305,7 @@ function submitChat() {
 
 function startTimer() {
   $("#timerWrapper").removeClass("d-none");
-  timer = 15;
+  timer = 100;
   clock = setInterval(count, 1000);
 }
 
@@ -356,6 +357,7 @@ function compareInputs() {
 
 function submitInput() {
   var choice = $(this).attr("data-type");
+  console.log(choice);
     if (choice == "rock") {
       // Make firebase input = 0
       console.log("0");

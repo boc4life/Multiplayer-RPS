@@ -305,7 +305,7 @@ function submitChat() {
 
 function startTimer() {
   $("#timerWrapper").removeClass("d-none");
-  timer = 100;
+  timer = 10;
   clock = setInterval(count, 1000);
 }
 
@@ -318,15 +318,16 @@ function count() {
     alert("Time ran out. The unresponsive players have been removed.")
       clearInterval(clock);
       database.ref("inputs").once("value", function(snapshot) {
-        if (snapshot.player1 == false) {
-          database.ref("activePlayers").update({
+        console.log(snapshot.val().player1);
+        if (snapshot.val().player1 == false) {
+          database.ref("activePlayers").set({
             player1: "",
             player1Btn: false,
             player1UID: ""
           })
         }
-        if (snapshot.player2 == false) {
-          database.ref("activePlayers").update({
+        if (snapshot.val().player2 == false) {
+          database.ref("activePlayers").set({
             player2: "",
             player2Btn: false,
             player2UID: ""

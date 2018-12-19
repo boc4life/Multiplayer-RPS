@@ -60,6 +60,7 @@ database.ref("activePlayers/").on("value", function(snapshot) {
       $("#player1Btn").addClass("d-none");
       $("#player1Name").html("<h3>" + snap.player1 + "</h3>");
         if (userIsPlayer1) {
+          console.log("Hi");
           $("#player1RPS").removeClass("d-none");
         }
     } else {
@@ -90,7 +91,7 @@ database.ref("activePlayers/").on("value", function(snapshot) {
       $("#player2Btn").removeClass("d-none");
       $("#player2Name").html("")
       $("#player2RPS").addClass("d-none");
-      $("#player1RPS").addClass("d-none");
+      $("#player2RPS").addClass("d-none");
     }
   })
 
@@ -320,14 +321,14 @@ function count() {
       database.ref("inputs").once("value", function(snapshot) {
         console.log(snapshot.val().player1);
         if (snapshot.val().player1 == false) {
-          database.ref("activePlayers").set({
+          database.ref("activePlayers").update({
             player1: "",
             player1Btn: false,
             player1UID: ""
           })
         }
         if (snapshot.val().player2 == false) {
-          database.ref("activePlayers").set({
+          database.ref("activePlayers").update({
             player2: "",
             player2Btn: false,
             player2UID: ""

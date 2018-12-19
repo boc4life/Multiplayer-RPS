@@ -358,12 +358,15 @@ function submitInput() {
   var choice = $(this).attr("data-type");
     if (choice == "rock") {
       // Make firebase input = 0
+      console.log("0");
     }
     else if (choice == "paper") {
       // Make firebase input = 1
+      console.log("1");
     }
     else if (choice == "scissors") {
       // Make firebase input = 2
+      console.log("2");
     }
     else {
       alert("ERROR");

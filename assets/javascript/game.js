@@ -284,6 +284,7 @@ function startGame() {
     game: true
   })
   $("#welcome").html("Two Players have entered! Make your choice!");
+  $(".playerImage").attr("src", "");
   $(".playerInput").addClass("activeBtn");
   $(".activeBtn").on("click", submitInput);
   startTimer();
@@ -306,7 +307,7 @@ function submitChat() {
 function startTimer() {
   $("#timerWrapper").removeClass("d-none");
   if (userIsPlayer1) {
-  timer = 20;
+  timer = 30;
   clock = setInterval(count, 1000);
   }
 }

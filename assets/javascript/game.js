@@ -284,8 +284,8 @@ function startGame() {
   player1Input = false;
   player2Input = false;
   database.ref("inputs").update({
-    one: false,
-    two: false,
+    player1: false,
+    player2: false,
     game: true
   })
   $("#welcome").html("Two Players have entered! Make your choice!");

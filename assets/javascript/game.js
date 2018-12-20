@@ -345,8 +345,8 @@ function count() {
 
 function compareInputs() {
   database.ref("inputs").once("value", function (snapshot) {
-    player1Input = snapshot.val().one;
-    player2Input = snapshot.val().two;
+    player1Input = snapshot.val().player1;
+    player2Input = snapshot.val().player2;
   })
   if (player1Input - player2Input == 0) {
     // tie

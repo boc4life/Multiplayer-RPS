@@ -84,14 +84,13 @@ database.ref("activePlayers/").on("value", function (snapshot) {
     $("#player2Name").html("<h3>" + snap.player2 + "</h3>")
     if (userIsPlayer2) {
       $("#player2RPS").removeClass("d-none");
-      console.log("This shouldn't happen");
     }
   } else {
     player2Active = false;
     $("#player2Btn").removeClass("d-none");
     $("#player2Name").html("")
     $("#player2RPS").addClass("d-none");
-    $("#player2RPS").addClass("d-none");
+    $("#player2Record").addClass("d-none");
   }
   if (snap.player1Btn == true && snap.player2Btn == true) {
     startGame();
@@ -111,10 +110,10 @@ database.ref("/Chat").limitToLast(5).on("child_added", function (snapshot) {
 })
 
 database.ref("inputs").on("value", function (snapshot) {
-  if (snapshot.player1Chosen && snapshot.player2Chosen == true) {
+  if (snapshot.val().player1Chosen == true && snapshot.val().player2Chosen == true) {
     compareInputs();
   }
-  var timeRemaining = snapshot.timer.val();
+  var timeRemaining = snapshot.val().timer;
   $("#timer").html(timeRemaining);
 })
 
@@ -280,6 +279,8 @@ function startGame() {
   database.ref("inputs").update({
     player1: false,
     player2: false,
+    player1Chosen: false,
+    player2Chosen: false,
     game: true
   })
   $("#welcome").html("Two Players have entered! Make your choice!");
@@ -305,7 +306,7 @@ function submitChat() {
 function startTimer() {
   $("#timerWrapper").removeClass("d-none");
   if (userIsPlayer1) {
-  timer = 100;
+  timer = 20;
   clock = setInterval(count, 1000);
   }
 }
@@ -313,6 +314,9 @@ function startTimer() {
 function count() {
   if (timer > 0) {
     timer--;
+    database.ref("inputs").update({
+      timer: timer
+    })
   }
   if (timer == 0) {
     alert("Time ran out. The unresponsive players have been removed.")
@@ -339,10 +343,30 @@ function count() {
 }
 
 function compareInputs() {
+  if (userIsPlayer1) {
+    clearInterval(clock);
+  }
   database.ref("inputs").once("value", function (snapshot) {
     player1Input = snapshot.val().player1;
     player2Input = snapshot.val().player2;
   })
+  var player1Choice;
+  var player2Choice;
+    if (player1Input == 0) {
+      player1Choice = "rock"}
+      else if (player1Input == 1) {
+        player1Choice = "paper"}
+        else if (player1Input == 2) {
+          player1Choice = "scissors"};
+    if (player2Input == 0) {
+      player2Choice = "rock"}
+      else if (player2Input == 1) {
+        player2Choice = "paper"}
+        else if (player2Input == 2) {
+          player2Choice = "scissors"};
+  $(".playerResponse").removeClass("d-none");
+  $("#player1Image").attr("src", "assets/images/" + player1Choice + ".png");
+  $("#player2Image").attr("src", "assets/images/" + player2Choice + ".png");
   if (player1Input - player2Input == 0) {
     // tie
   }
@@ -355,6 +379,10 @@ function compareInputs() {
   else {
     alert("ERROR");
   }
+  database.ref("inputs").update({
+    player1Chosen: false,
+    player2Chosen: false
+  })
 }
 
 function submitInput() {
@@ -368,11 +396,9 @@ function submitInput() {
       ['player' + player]: 0,
       ['player' + player + "Chosen"]: true
     })
-    console.log("0");
   }
   else if (choice == "paper") {
     // Make firebase input = 1
-    console.log("1");
     database.ref("inputs").update({
       ['player' + player]: 1,
       ['player' + player + "Chosen"]: true
@@ -380,7 +406,6 @@ function submitInput() {
   }
   else if (choice == "scissors") {
     // Make firebase input = 2
-    console.log("2");
     database.ref("inputs").update({
       ['player' + player]: 2,
       ['player' + player + "Chosen"]: true

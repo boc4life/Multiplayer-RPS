@@ -4,6 +4,11 @@
     display: flex;
 }
 
+.answerBox {
+    border: 2px solid;
+    height: 175px;
+}
+
 #welcome {
     margin:auto;
     font-size: 1.75rem;

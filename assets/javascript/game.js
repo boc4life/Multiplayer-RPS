@@ -111,6 +111,9 @@ database.ref("inputs").on("value", function (snapshot) {
   if (snapshot.player1Chosen && snapshot.player2Chosen == true) {
     compareInputs();
   }
+  if (snapshot.game == true) {
+    startGame();
+  }
 })
 
 // Declaring Global variables for page load.
@@ -280,9 +283,10 @@ function player2Sit() {
 function startGame() {
   player1Input = false;
   player2Input = false;
-  database.ref("inputs").set({
-    player1: false,
-    player2: false,
+  database.ref("inputs").update({
+    one: false,
+    two: false,
+    game: true
   })
   $("#welcome").html("Two Players have entered! Make your choice!");
   $(".playerInput").addClass("activeBtn");
@@ -366,7 +370,8 @@ function submitInput() {
   if (choice == "rock") {
     // Make firebase input = 0
     database.ref("inputs").update({
-      [player]: 0
+      ['player' + player]: 0,
+      ['player' + player + "Chosen"]: true
     })
     console.log("0");
   }
@@ -374,14 +379,16 @@ function submitInput() {
     // Make firebase input = 1
     console.log("1");
     database.ref("inputs").update({
-      [player]: 1
+      ['player' + player]: 1,
+      ['player' + player + "Chosen"]: true
     })
   }
   else if (choice == "scissors") {
     // Make firebase input = 2
     console.log("2");
     database.ref("inputs").update({
-      [player]: 2
+      ['player' + player]: 2,
+      ['player' + player + "Chosen"]: true
     })
   }
   else {

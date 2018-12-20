@@ -287,6 +287,7 @@ function startGame() {
   $(".playerImage").attr("src", "");
   $(".playerInput").addClass("activeBtn");
   $(".activeBtn").on("click", submitInput);
+  $("#timerWrapper").removeClass("d-none");
   startTimer();
 }
 
@@ -368,7 +369,7 @@ function compareInputs() {
   else {
     alert("ERROR");
   }
-  startGame();
+  setTimeout(startGame(), 5000);
 }
 
 function submitInput() {

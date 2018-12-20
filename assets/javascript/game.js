@@ -93,6 +93,9 @@ database.ref("activePlayers/").on("value", function (snapshot) {
     $("#player2RPS").addClass("d-none");
     $("#player2RPS").addClass("d-none");
   }
+  if (snap.player1Btn == true && snap.player2Btn == true) {
+    startGame();
+  }
 })
 
 // Chat display function
@@ -111,9 +114,8 @@ database.ref("inputs").on("value", function (snapshot) {
   if (snapshot.player1Chosen && snapshot.player2Chosen == true) {
     compareInputs();
   }
-  if (snapshot.game == true) {
-    startGame();
-  }
+  var timeRemaining = snapshot.timer.val();
+  $("#timer").html(timeRemaining);
 })
 
 // Declaring Global variables for page load.
@@ -256,10 +258,6 @@ function player1Sit() {
       player1Btn: true,
       player1: user,
       player1UID: uid
-    }).then(function () {
-      if (player1Active && player2Active) {
-        startGame();
-      }
     })
   }
 }
@@ -272,10 +270,6 @@ function player2Sit() {
       player2Btn: true,
       player2: user,
       player2UID: uid
-    }).then(function () {
-      if (player1Active && player2Active) {
-        startGame();
-      }
     })
   }
 }
@@ -310,14 +304,15 @@ function submitChat() {
 
 function startTimer() {
   $("#timerWrapper").removeClass("d-none");
+  if (userIsPlayer1) {
   timer = 100;
   clock = setInterval(count, 1000);
+  }
 }
 
 function count() {
   if (timer > 0) {
     timer--;
-    $("#timer").html(timer);
   }
   if (timer == 0) {
     alert("Time ran out. The unresponsive players have been removed.")

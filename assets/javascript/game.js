@@ -349,40 +349,25 @@ function compareInputs() {
   database.ref("inputs").once("value", function (snapshot) {
     player1Input = snapshot.val().player1;
     player2Input = snapshot.val().player2;
+    player1Choice = snapshot.val().player1Choice;
+    player2Choice = snapshot.val().player2Choice;
   })
-  var player1Choice;
-  var player2Choice;
-    if (player1Input == 0) {
-      player1Choice = "rock"}
-      else if (player1Input == 1) {
-        player1Choice = "paper"}
-        else if (player1Input == 2) {
-          player1Choice = "scissors"};
-    if (player2Input == 0) {
-      player2Choice = "rock"}
-      else if (player2Input == 1) {
-        player2Choice = "paper"}
-        else if (player2Input == 2) {
-          player2Choice = "scissors"};
   $(".playerResponse").removeClass("d-none");
   $("#player1Image").attr("src", "assets/images/" + player1Choice + ".png");
   $("#player2Image").attr("src", "assets/images/" + player2Choice + ".png");
   if (player1Input - player2Input == 0) {
-    // tie
+    alert("tie");
   }
   else if (player1Input - player2Input == -2 || 1) {
-    // Player 1 wins
+    alert("Player 1 Wins");
   }
   else if (player1Input - player2Input == -1 || 2) {
-    // Player 2 wins
+    alert("Player 2 Wins");
   }
   else {
     alert("ERROR");
   }
-  database.ref("inputs").update({
-    player1Chosen: false,
-    player2Chosen: false
-  })
+  startGame();
 }
 
 function submitInput() {
@@ -394,21 +379,24 @@ function submitInput() {
     // Make firebase input = 0
     database.ref("inputs").update({
       ['player' + player]: 0,
-      ['player' + player + "Chosen"]: true
+      ['player' + player + "Chosen"]: true,
+      ['player' + player + "Choice"]: choice
     })
   }
   else if (choice == "paper") {
     // Make firebase input = 1
     database.ref("inputs").update({
       ['player' + player]: 1,
-      ['player' + player + "Chosen"]: true
+      ['player' + player + "Chosen"]: true,
+      ['player' + player + "Choice"]: choice
     })
   }
   else if (choice == "scissors") {
     // Make firebase input = 2
     database.ref("inputs").update({
       ['player' + player]: 2,
-      ['player' + player + "Chosen"]: true
+      ['player' + player + "Chosen"]: true,
+      ['player' + player + "Choice"]: choice
     })
   }
   else {

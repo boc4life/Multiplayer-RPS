@@ -15,14 +15,17 @@ var user = firebase.auth().currentUser;
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
     // User is signed in.
-    console.log(user);
-    $("#welcome").html("Logged in successfully. Please choose a display name to take a seat.");
-    $(".loginRemove").addClass("d-none");
-    $(".loginAdd").removeClass("d-none");
-    $("#logoutBtn").removeClass("d-none");
-    userDisplay = user.displayName;
-    console.log(user.wins);
-    console.log(user.displayName);
+    console.log(user.uid);
+    database.ref("users/" + uid).once("value", function (snapshot){
+      var snap = snapshot.val();
+      displayName = snap.username
+    }).then(function() {
+      $("#welcome").html("Logged in successfully as " + displayName);
+      $(".loginRemove").addClass("d-none");
+      $(".loginAdd").removeClass("d-none");
+      $("#logoutBtn").removeClass("d-none");
+    })
+    // userDisplay = user.displayName;
   } else {
     // No user is signed in.
     $("#welcome").html("Sign In or Register to Play!");
@@ -54,13 +57,14 @@ database.ref("activePlayers/").on("value", function (snapshot) {
       userWins = player.val().wins;
       userLosses = player.val().losses;
       userTies = player.val().ties;
+      username = player.val().username
       $("#player1Record").html("<strong>Wins:</strong> " + userWins + "<br><strong>Losses:</strong> " + userLosses + "<br><strong>Ties:</strong> " + userTies);
+      $("#player1Name").html("<h3>" + username + "</h3>")
     })
     player1Active = true;
     $("#player1Btn").addClass("d-none");
-    $("#player1Name").html("<h3>" + snap.player1 + "</h3>");
+    // $("#player1Name").html("<h3>" + snap.player1 + "</h3>");
     if (userIsPlayer1) {
-      console.log("Hi");
       $("#player1RPS").removeClass("d-none");
     }
   } else {
@@ -77,11 +81,13 @@ database.ref("activePlayers/").on("value", function (snapshot) {
       userWins = player.val().wins;
       userLosses = player.val().losses;
       userTies = player.val().ties;
+      username = player.val().username;
       $("#player2Record").html("<strong>Wins:</strong> " + userWins + "<br><strong>Losses:</strong> " + userLosses + "<br><strong>Ties:</strong> " + userTies);
+      $("#player2Name").html("<h3>" + username + "</h3>")
     })
     player2Active = true;
     $("#player2Btn").addClass("d-none");
-    $("#player2Name").html("<h3>" + snap.player2 + "</h3>")
+    // $("#player2Name").html("<h3>" + snap.player2 + "</h3>")
     if (userIsPlayer2) {
       $("#player2RPS").removeClass("d-none");
     }
@@ -121,6 +127,7 @@ database.ref("inputs").on("value", function (snapshot) {
 
 var signinOpen = false;
 var registerOpen = false;
+var user = false;
 var displayName;
 var player1Active;
 var player2Active;
@@ -187,7 +194,7 @@ function signIn() {
 function register() {
   email = $("#registerEmail").val().trim();
   password = $("#registerPassword").val().trim();
-  newName = $("#usernameUpdate").val().trim();
+  userName = $("#registerUsername").val().trim();
   firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
     var errorCode = error.code;
     var errorMessage = error.message;
@@ -203,13 +210,16 @@ function register() {
   }).then(function () {
     user = firebase.auth().currentUser;
     uid = user.uid;
+    // $("#welcome").html("Logged in successfully as " + userName);
+    $(".displayName").addClass("d-none");
     database.ref("users/" + uid).set({
       wins: 0,
       losses: 0,
-      ties: 0
+      ties: 0,
+      username: userName
     })
   })
-  return userDisplay = newName;
+  // return userDisplay = newName;
 }
 
 function updateUser() {
@@ -220,12 +230,13 @@ function updateUser() {
     wins: 0,
     losses: 0,
     ties: 0
-  }).then(function () {
-    $("#welcome").html("Logged in successfully as " + newName);
-    $(".displayName").addClass("d-none");
-    console.log(user);
   })
-  return userDisplay = newName;
+  // .then(function () {
+  //   $("#welcome").html("Logged in successfully as " + newName);
+  //   $(".displayName").addClass("d-none");
+  //   console.log(user);
+  // })
+  // return userDisplay = newName;
 }
 
 function logout() {
@@ -250,24 +261,22 @@ function logout() {
 }
 
 function player1Sit() {
-  if (!player1Active && !userIsPlayer2 && userDisplay) {
+  if (!player1Active && !userIsPlayer2 && user) {
     userIsPlayer1 = true;
-    user = userDisplay;
     database.ref("activePlayers").update({
       player1Btn: true,
-      player1: user,
+      // player1: user,
       player1UID: uid
     })
   }
 }
 
 function player2Sit() {
-  if (!player2Active && !userIsPlayer1 && userDisplay) {
+  if (!player2Active && !userIsPlayer1 && user) {
     userIsPlayer2 = true;
-    user = userDisplay;
     database.ref("activePlayers").update({
       player2Btn: true,
-      player2: user,
+      // player2: user,
       player2UID: uid
     })
   }
@@ -284,11 +293,10 @@ function startGame() {
     game: true
   })
   $("#welcome").html("Two Players have entered! Make your choice!");
-  $(".playerImage").attr("src", "");
   $(".playerInput").addClass("activeBtn");
   $(".activeBtn").on("click", submitInput);
   $("#timerWrapper").removeClass("d-none");
-  startTimer();
+  // startTimer();
 }
 
 function submitChat() {
